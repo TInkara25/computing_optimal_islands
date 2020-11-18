@@ -1,1 +1,1 @@
-# computing_optimal_islands
+# Computing optimal islands
