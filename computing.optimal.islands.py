@@ -21,10 +21,8 @@ print(tocke)
 #randPoints = [[6.795, 6.982], [3.744, 7.532], [6.621, 1.728], [8.745, 9.22], [3.676, 3.392], [4.494, 8.904], [9.794, 8.195], [2.055, 3.823], [2.384, 1.969], [6.45, 8.747]]  
 
 def najvisja_tocka(randPoints):
-    #določi točko, ki ima največjo y koordinato
-    for i in randPoints:
-        najvisja_tocka = max(randPoints,key=lambda item: item[1])            
-    return najvisja_tocka
+    #določi točko, ki ima največjo y koordinato          
+    return max(randPoints,key=lambda item: item[1])
 
 najvisja = najvisja_tocka(tocke)
 print(najvisja)
