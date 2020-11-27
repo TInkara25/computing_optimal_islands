@@ -1,9 +1,9 @@
 import random
 
-def nakljucne_tocke(n, k):
-    #nam da seznam k točk v koordinatnem sistemu na intervalu [0,n]x[0,n]
+def nakljucne_tocke(m, n, k):
+    #nam da seznam k točk v koordinatnem sistemu na intervalu [0,m]x[0,n]
     #koordinate so zaokrožene na 3 decimalna mesta
-    rangeX = (0, n)
+    rangeX = (0, m)
     rangeY = (0, n)
     qty = k  
     randPoints = []
@@ -15,7 +15,7 @@ def nakljucne_tocke(n, k):
         i += 1
     return randPoints
 
-tocke = nakljucne_tocke(10,10)
+tocke = nakljucne_tocke(10,10,10)
 print(tocke)
 
 #randPoints = [[6.795, 6.982], [3.744, 7.532], [6.621, 1.728], [8.745, 9.22], [3.676, 3.392], [4.494, 8.904], [9.794, 8.195], [2.055, 3.823], [2.384, 1.969], [6.45, 8.747]]  
