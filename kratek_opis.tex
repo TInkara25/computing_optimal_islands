@@ -1,0 +1,43 @@
+\documentclass[a4, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[slovene]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{listings}
+
+\begin{document}
+
+\title{ Computing optimal islands  \\
+  \large Kratek opis projekta}
+
+\author{Avtorja: Matevž Kopač, Tinkara Žitko}
+
+\maketitle
+
+\section{Opis problema}
+V ravnini imamo podano množico točk P. Problem se ukvarja z iskanjem takega konveksnega večkotnika - otoka, katerega oglišča so podmnožica množice P in ima največjo možno ploščino. Večkotnik je konveksen, če v njem ali na njegovem robu v celoti leži vsaka daljica med poljubnima dvema ogliščema. Iskani večkotnik mora biti prazen, torej znotraj večkotnika ne sme ležati nobena točka iz množice P. 
+
+Tak otok iščemo iterativno po množici točk P. Najprej poiščemo vse prazne trikotnike, ki jih nato povečujemo, do največjih možnih praznih konveksnih večkotnikov in izmed dobljenih izberemo največjega.
+
+Postopek na vsakem dobljenem trikotniku začnemo z izbiro največjega oglišča, ki ga označimo z \emph{p}  in povezave \emph{e}, ki leži nasproti največjega oglišča. S \emph{T(p, e)} torej označimo ploščino otoka, ki vsebuje \emph{p} kot največjo točko in vsebuje povezavo \emph{e}. Z dodajanjem povezav želimo povečati ploščino, brez da bi kršili katero izmed začetnih predpostavk o konveksnosti in praznosti množice. Če krajišči povezave \emph{e} označimo z \emph{q} in \emph{q'} , najprej predpostavimo, da naš največji večkotnik vsebuje povezavi \emph{e} in \emph{pq}, ter iz oglišča \emph{q} iščemo povezave, ki bi povečale ploščino trenutnega večkotnika. Nato pa dobljeni večkotnik povečujemo še z dodajanjem povezav med ogljišči \emph{p} in \emph{q'}. 
+Za ohranjanje konveksnosti lahko upoštevamo načelo, s katerim se znebimo neustreznih točk. Če navidezno podaljšamo daljico \emph{q'q}, lahko iz množice potencialnih oglišč izločimo vsa oglišča, ki ležijo pod njo.
+
+\section{Reševanje problema}
+
+Za reševanje problema bova uporabila dinamično programiranje, izhajala bova iz spodaj navedene formule za ploščino, ki bo postopoma gradila večkotnik, 
+ki bo ustrezal našim predpostavkam. Na koncu bova iz množice vseh ustreznih večkotnikov izbrala tistega z največjo ploščino,
+ $${T(p,e)} =  \text{max area} ( \triangle pqq') + T(p,e' )$$ 
+ pri pogojih, da je T(p,e´) definirana, torej da v njeni notranjosti ni drugih točk in da je kot med $e$ in $e'$  manjši od 180°. 
+Na vrhu bova dodala tudi horizontalno premico $h_p$, ki bo potekala skozi oglišče $p$. Vzemimo na primer dve oglišči $q_i$ in $q_j$, ki ležita pod $h_p$. Če bo trikotnik $ \triangle(p,q_iq_j)$ vseboval kakšno izmed preostalih oglišč, potem $q_iq_j$ ne bo rob končnega večkotnika. Sedaj smo verjetno množico točk že močno zmanjšali, saj kandidati za oglišča ležijo pod $h_p$ in nad $q'q$. Točke znotraj tega območje bova označila s $KO(E)$, kjer je E nov podaljšek roba trikotnika.
+
+Problem lahko prevedemo na iskanje roba $q_iq_j$ z največjo uteženostjo s pomočjo dinamičnega programiranja. Pomagala si bova s problemom iz članka Computing optimal islands, ki ga bova prilagodila najinim zahtevam. Preštela bova točke, ki jih vsebuje večkotnik, ki ga ustvarimo z dodano povezano in izločila tiste, katerim se število spremeni več kot za 1 glede na prejšnji večkotnik, saj bi to pomenilo, da je še neka točka v notranjosti. 
+
+\section{Poskusi z manipulacijo podatkov}
+
+V nadaljevanju bova v programskem jeziku Python napisala program, ki s pomočjo dinamičnega programiranja poišče množico vseh ustreznih večkotnikov in izbere največjega. Izvedla bova poskus, kako povečanje točk vpliva na čas izračuna in ploščino največjega konveksnega večkotnika.
+\end{document}
+
