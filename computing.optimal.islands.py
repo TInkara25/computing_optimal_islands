@@ -20,10 +20,10 @@ def nakljucne_tocke(m, n, k):
 #tocke = nakljucne_tocke(10,10,10)
 #print(tocke)
 
-#points = [[6.795, 6.982], [3.744, 7.532], [6.621, 1.728], [8.745, 9.22], [3.676, 3.392], [4.494, 8.904], [9.794, 8.195], [2.055, 3.823], [2.384, 1.969], [6.45, 8.747]]  
-points = [[0, 0], [5, 0], [0, 5], [0, 3], [1, 1], [7, 4]]
+#points = [[0, 0], [5, 0], [0, 5], [0, 3], [1, 1], [7, 4]]
 
-
+#---------------POMOŽNE FUNKCIJE---------------------------------------------------------------
+    
 def ploscina_trikotnika(a,b,c):
     #ploščina trikotnika z oglišči a, b in c
     x=[a[0],b[0],c[0]]
@@ -31,19 +31,9 @@ def ploscina_trikotnika(a,b,c):
     area=abs(0.5*( (x[0]*(y[1]-y[2])) + (x[1]*(y[2]-y[0])) + (x[2]*(y[0]-y[1]))))
     return area
 
-#a = [0,0]
-#b = [5,0]
-#c = [0,5]
-#d = [10,10]
 
-#print(ploscina_trikotnika(a,b,c))
-
-def predznak(a, b, c):
-    return (a[0] - c[0]) * (b[1] - c[1]) - (b[0] - c[0]) * (a[1] - c[1])
-
-
+# legalen_trikotnik preveri ali je d znotraj trikotnika abc
 def legalen(a,b,c,d):
-    #legalen preveri ali je točka d znotraj trikotnika abc
     pl = ploscina_trikotnika(a,b,c)
     pl1 = ploscina_trikotnika(d,b,c)
     pl2 = ploscina_trikotnika(a,d,c)
@@ -54,9 +44,10 @@ def legalen(a,b,c,d):
     else:
         return True
 
+#print(points)
 
+#uredi vozlišča glede na lego glede na a, od leve proti desni (nasprotni smeri urinega kazalca)
 def urejena_vozlisca(points, a):
-    #funkcija vrne seznam urejenih vozlišč glede na točko a v nasprotni smeri urinega kazalca
     seznam_kotov = []
     for tocka in points:
         if tocka[0] == a[0]:
@@ -76,12 +67,28 @@ def urejena_vozlisca(points, a):
     urejen_seznam_vozlisc = [item[0] for item in seznam_kotov]
     return urejen_seznam_vozlisc
 
+#tukaj a ni najvišja točka ampak eno izmed krajišč trikotnika, ki ni najvišje, c pa je novo oglišče potencialnega večkotnika
+#preverja konveksnost potencialnega večkotnika
+def ustrezna_tocka(a,b,c):
+    if b[0] == a[0]:
+        return True 
+    else:
+        k = (b[1] - a[1]) / (b[0] - a[0])
+        y = k*c[0] - k*a[0] + a[1]
+        if y <= c[1]:
+            return True
+        else:
+            return False
 
+#--------------------------------------------------------------------------------------------------------
+
+#na seznamu poišče prazne trikotnike
+#vrne seznam trikotnikov, urejeni so tako, da je njihovo prvo oglišče tisto z najvišjo koordinato, ostali dve
+    #pa sta urejeni od leve proti desni glede na prvega
 def legalni_trikotniki(points):
-    #vrne seznam praznih trikotnikov
-    #prvo oglišče v vsakem trikotniku je tisto z najvišjo koordinato
-    seznam_legalnih_trikotnikov = []
-    for point in points: 
+    seznam_legalnih_povezav = []
+    n = len(points)
+    for i in range(0,n): 
         a = max(points,key=lambda item: item[1])
         points.remove(a) 
         urejena = urejena_vozlisca(points, a)
@@ -103,33 +110,18 @@ def legalni_trikotniki(points):
                 urejena.append(b)
                 urejena.append(c)
                 if test == True:
-                    if [a,c,b]  in seznam_legalnih_trikotnikov:
+                    if [a,c,b]  in seznam_legalnih_povezav:
                         pass
-                    elif [a,b,c] in seznam_legalnih_trikotnikov:
+                    elif [a,b,c] in seznam_legalnih_povezav:
                         pass
                     else:
-                        seznam_legalnih_trikotnikov.append([a,b,c])
-    return seznam_legalnih_trikotnikov
-
+                        e = urejena_vozlisca([b,c],a)[0]
+                        f = urejena_vozlisca([b,c],a)[1]
+                        seznam_legalnih_povezav.append([a,e,f])
+    return seznam_legalnih_povezav
                 
-v = [4, 6]
 tocke = [[0, 0], [5, 0], [0, 5], [0, 3], [1, 1], [7, 4]]
-
-
-#print(urejena_vozlisca(tocke, v))
-#print(legalni_trikotniki(tocke))
-
-#tukaj a ni najvišja točka ampak eno izmed krajišč trikotnika, ki ni najvišje, c pa je novo oglišče potencialnega večkotnika. 
-def ustrezna_tocka(a,b,c):
-    if b[0] == a[0]:
-        return True 
-    else:
-        k = (b[1] - a[1]) / (b[0] - a[0])
-        y = k*c[0] - k*a[0] + a[1]
-        if y <= c[1]:
-            return True
-        else:
-            return False
+print(legalni_trikotniki(tocke))
 
 
 #dodaja povezave k trikotnikom
@@ -139,7 +131,6 @@ def maximalni_veckotniki(points):
     #print(trikotniki)
     for i in trikotniki:
         #pobere vsak trikotnik
-        legalne_tocke = [] #seznam moznih tock (brez oglisc trikotnika in tistih ki so pod premico b,c)
         #print(i)
         a = i[0]
         b = i[1]
@@ -147,21 +138,22 @@ def maximalni_veckotniki(points):
         print(a)
         print(b)
         print(c)
-        tc.remove(a)
-        tc.remove(b)   
-        tc.remove(c)
+        #tc.remove(a)
+        #tc.remove(b)   
+        #tc.remove(c)
+        opt = 0
+        #print(trikotniki)
         for j in tc:
-            if ustrezna_tocka(b,c,j) == True and legalen(a, b, c, j):
-                legalne_tocke.append(j)
+            if ustrezna_tocka(b,c,j) == True and ([a, c, j] or [a, j, c]) in trikotniki:
+                print([a, c, j])
+                opt = max(opt, opt + ploscina_trikotnika(a,c,j))
             else:
                 pass
-            urejene_legalne = urejena_vozlisca(legalne_tocke, b) #urejena vozlišča glede na oglišče b
         #print(trikotniki)
         #print(points)
-    return legalne_tocke
-
+    return opt
         
-#print(maximalni_veckotniki(points))
+print(maximalni_veckotniki(points))
 
 def max_ploscina(points):
     #na seznamu maksimalnih večkotnikov poišče tistega z največjo ploščino 
