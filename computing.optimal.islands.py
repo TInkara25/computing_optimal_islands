@@ -123,28 +123,26 @@ def legalni_trikotniki(points):
 tocke = [[0, 0], [5, 0], [0, 5], [0, 3], [1, 1], [7, 4]]
 print(legalni_trikotniki(tocke))
 
-
 #dodaja povezave k trikotnikom
 def maximalni_veckotniki(points):
     tc = points.copy()
     trikotniki = legalni_trikotniki(points)
     print(trikotniki)
     opt = 0
-    veckotniki = []
     for i in range(0, len(trikotniki)):
         trikotnik = trikotniki[i]
         #pobere vsak trikotnik
         a = trikotnik[0]
         b = trikotnik[1]
         c = trikotnik[2]
-        opt = ploscina_trikotnika(a,b,c)
+        tc.remove(b)
         #print(trikotniki)
         for j in tc:
             if ustrezna_tocka(b,c,j) == True and ([a, c, j] or [a, j, c]) in trikotniki:
-                opt = max(opt, opt + ploscina_trikotnika(a,c,j))
+                opt = max(opt, ploscina_trikotnika(a,b,c) + ploscina_trikotnika(a,c,j))
             else:
                 pass
-        veckotniki.append(opt)
-    return max(veckotniki)
+        tc.append(b)
+    return opt
 
 #print(max_ploscina(points))
