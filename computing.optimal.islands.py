@@ -128,49 +128,23 @@ print(legalni_trikotniki(tocke))
 def maximalni_veckotniki(points):
     tc = points.copy()
     trikotniki = legalni_trikotniki(points)
-    #print(trikotniki)
-    for i in trikotniki:
+    print(trikotniki)
+    opt = 0
+    veckotniki = []
+    for i in range(0, len(trikotniki)):
+        trikotnik = trikotniki[i]
         #pobere vsak trikotnik
-        #print(i)
-        a = i[0]
-        b = i[1]
-        c = i[2]
-        print(a)
-        print(b)
-        print(c)
-        #tc.remove(a)
-        #tc.remove(b)   
-        #tc.remove(c)
-        opt = 0
+        a = trikotnik[0]
+        b = trikotnik[1]
+        c = trikotnik[2]
+        opt = ploscina_trikotnika(a,b,c)
         #print(trikotniki)
         for j in tc:
             if ustrezna_tocka(b,c,j) == True and ([a, c, j] or [a, j, c]) in trikotniki:
-                print([a, c, j])
                 opt = max(opt, opt + ploscina_trikotnika(a,c,j))
             else:
                 pass
-        #print(trikotniki)
-        #print(points)
-    return opt
-        
-print(maximalni_veckotniki(points))
-
-def max_ploscina(points):
-    #na seznamu maksimalnih večkotnikov poišče tistega z največjo ploščino 
-    #vrne njegovo ploščino in število njegovih oglišč
-    max_veckotniki = maximalni_veckotniki(points)
-    ploscine = []
-    for i in range(0,len(max_veckotniki)):
-        st_oglisc = 2
-        pl = 0
-        veckotnik = max_veckotniki[i]
-        for j in range(0,len(veckotnik)-2):
-            a = veckotnik[0]
-            b = veckotnik[j+1]
-            c = veckotnik[j+2]
-            pl += ploscina_trikotnika(a,b,c)
-            st_oglisc += 1
-        ploscine.append([pl, st_oglisc])
-    return max(ploscine, key = lambda item: item[0])
+        veckotniki.append(opt)
+    return max(veckotniki)
 
 #print(max_ploscina(points))
